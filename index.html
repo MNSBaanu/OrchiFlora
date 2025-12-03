@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orchi-Flora Temperature Analyzer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌸 Orchi-Flora Temperature Analyzer</h1>
+            <p>Professional Temperature Analysis System for Orchid Cultivation</p>
+        </header>
+
+        <div class="stats-bar">
+            <div class="stat-item">
+                <span class="stat-label">Days Recorded:</span>
+                <span class="stat-value" id="dayCount">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Max Days:</span>
+                <span class="stat-value">30</span>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('entry')">📝 Data Entry</button>
+            <button class="tab-btn" onclick="showTab('view')">📊 View Data</button>
+            <button class="tab-btn" onclick="showTab('analysis')">📈 Analysis</button>
+            <button class="tab-btn" onclick="showTab('converter')">🔄 Converter</button>
+        </div>
+
+        <!-- Data Entry Tab -->
+        <div id="entry" class="tab-content active">
+            <div class="card">
+                <h2>Add Temperature Data</h2>
+                <form id="tempForm" onsubmit="addTemperature(event)">
+                    <div class="form-group">
+                        <label>Day Number:</label>
+                        <input type="number" id="dayNumber" readonly>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Daytime Temperature (°C):</label>
+                            <input type="number" step="0.1" id="dayTemp" required>
+                            <span class="converted" id="dayTempF"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Nighttime Temperature (°C):</label>
+                            <input type="number" step="0.1" id="nightTemp" required>
+                            <span class="converted" id="nightTempF"></span>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Add Day Data</button>
+                    <button type="button" class="btn btn-secondary" onclick="clearAllData()">Clear All Data</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- View Data Tab -->
+        <div id="view" class="tab-content">
+            <div class="card">
+                <h2>Temperature Records</h2>
+                <div id="dataTable"></div>
+            </div>
+        </div>
+
+        <!-- Analysis Tab -->
+        <div id="analysis" class="tab-content">
+            <div class="card">
+                <h2>Temperature Analysis Report</h2>
+                <button class="btn btn-primary" onclick="generateAnalysis()">Generate Report</button>
+                <div id="analysisReport"></div>
+            </div>
+        </div>
+
+        <!-- Converter Tab -->
+        <div id="converter" class="tab-content">
+            <div class="card">
+                <h2>Temperature Converter</h2>
+                <div class="converter-section">
+                    <div class="form-group">
+                        <label>Celsius:</label>
+                        <input type="number" step="0.1" id="celsiusInput" oninput="convertFromCelsius()">
+                    </div>
+                    <div class="converter-arrow">⇄</div>
+                    <div class="form-group">
+                        <label>Fahrenheit:</label>
+                        <input type="number" step="0.1" id="fahrenheitInput" oninput="convertFromFahrenheit()">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
