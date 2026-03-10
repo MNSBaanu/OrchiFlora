@@ -1,0 +1,4 @@
+node_modules/
+orchi-flora-management/
+.DS_Store
+*.log
