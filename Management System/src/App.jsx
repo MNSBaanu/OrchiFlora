@@ -1,34 +1,75 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import Dashboard from './components/Dashboard'
+import TemperatureModule from './components/TemperatureModule'
+import EnvironmentalMonitoring from './components/EnvironmentalMonitoring'
+import PlantInventory from './components/PlantInventory'
+import ProductionPlanning from './components/ProductionPlanning'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [activeTab, setActiveTab] = useState('dashboard')
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'dashboard':
+        return <Dashboard />
+      case 'temperature':
+        return <TemperatureModule />
+      case 'environmental':
+        return <EnvironmentalMonitoring />
+      case 'inventory':
+        return <PlantInventory />
+      case 'production':
+        return <ProductionPlanning />
+      default:
+        return <Dashboard />
+    }
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+    <div className="app-container">
+      <header className="app-header">
+        <h1>Orchi-Flora Management System</h1>
+        <p>Comprehensive Orchid Farm Management & Analysis Platform</p>
+      </header>
+
+      <nav className="nav-tabs">
+        <button
+          className={`nav-tab ${activeTab === 'dashboard' ? 'active' : ''}`}
+          onClick={() => setActiveTab('dashboard')}
+        >
+          Dashboard
         </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+        <button
+          className={`nav-tab ${activeTab === 'temperature' ? 'active' : ''}`}
+          onClick={() => setActiveTab('temperature')}
+        >
+          Temperature Analysis
+        </button>
+        <button
+          className={`nav-tab ${activeTab === 'environmental' ? 'active' : ''}`}
+          onClick={() => setActiveTab('environmental')}
+        >
+          Environmental
+        </button>
+        <button
+          className={`nav-tab ${activeTab === 'inventory' ? 'active' : ''}`}
+          onClick={() => setActiveTab('inventory')}
+        >
+          Plant Inventory
+        </button>
+        <button
+          className={`nav-tab ${activeTab === 'production' ? 'active' : ''}`}
+          onClick={() => setActiveTab('production')}
+        >
+          Production
+        </button>
+      </nav>
+
+      <main>
+        {renderContent()}
+      </main>
+    </div>
   )
 }
 
