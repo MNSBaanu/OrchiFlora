@@ -177,7 +177,7 @@ function generateAnalysis() {
     // Generate HTML report
     let html = `
         <div class="analysis-section">
-            <h3>📊 Statistical Summary</h3>
+            <h3>Statistical Summary</h3>
             <div class="analysis-item">
                 <span>Days Analyzed:</span>
                 <strong>${temperatureData.length}</strong>
@@ -213,7 +213,7 @@ function generateAnalysis() {
         </div>
         
         <div class="analysis-section">
-            <h3>✅ Suitability Assessment</h3>
+            <h3>Suitability Assessment</h3>
             <div class="suitability">
     `;
     
