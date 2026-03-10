@@ -57,6 +57,7 @@
                     
                     <button type="submit" class="btn btn-primary">Add Day Data</button>
                     <button type="button" class="btn btn-secondary" onclick="clearAllData()">Clear All Data</button>
+                    <button type="button" class="btn btn-primary" onclick="exportToCSV()">Export to CSV</button>
                 </form>
             </div>
         </div>
@@ -65,6 +66,7 @@
         <div id="view" class="tab-content">
             <div class="card">
                 <h2>Temperature Records</h2>
+                <button class="btn btn-primary" onclick="exportToCSV()" style="margin-bottom: 20px;">Export to CSV</button>
                 <div id="dataTable"></div>
             </div>
         </div>

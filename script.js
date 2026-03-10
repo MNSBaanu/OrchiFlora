@@ -4,6 +4,7 @@ const MAX_DAYS = 30;
 
 // Initialize
 document.addEventListener('DOMContentLoaded', function() {
+    loadDataFromStorage();
     updateDayNumber();
     updateStats();
     
@@ -28,6 +29,29 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+// Load data from localStorage
+function loadDataFromStorage() {
+    const savedData = localStorage.getItem('orchiFloraData');
+    if (savedData) {
+        try {
+            temperatureData = JSON.parse(savedData);
+        } catch (e) {
+            console.error('Error loading data:', e);
+            temperatureData = [];
+        }
+    }
+}
+
+// Save data to localStorage
+function saveDataToStorage() {
+    try {
+        localStorage.setItem('orchiFloraData', JSON.stringify(temperatureData));
+    } catch (e) {
+        console.error('Error saving data:', e);
+        alert('Warning: Could not save data to browser storage.');
+    }
+}
 
 // Temperature conversion functions
 function convertToFahrenheit(celsius) {
@@ -63,12 +87,36 @@ function addTemperature(event) {
     event.preventDefault();
     
     if (temperatureData.length >= MAX_DAYS) {
-        alert('Maximum 30 days reached!');
+        alert('Maximum 30 days reached! Please clear data to add more entries.');
         return;
     }
     
-    const dayTemp = parseFloat(document.getElementById('dayTemp').value);
-    const nightTemp = parseFloat(document.getElementById('nightTemp').value);
+    const dayTempInput = document.getElementById('dayTemp');
+    const nightTempInput = document.getElementById('nightTemp');
+    
+    const dayTemp = parseFloat(dayTempInput.value);
+    const nightTemp = parseFloat(nightTempInput.value);
+    
+    // Validation
+    if (isNaN(dayTemp) || isNaN(nightTemp)) {
+        alert('Error: Please enter valid temperature values.');
+        return;
+    }
+    
+    if (dayTemp < -50 || dayTemp > 60) {
+        alert('Error: Daytime temperature seems unrealistic. Please enter a value between -50°C and 60°C.');
+        return;
+    }
+    
+    if (nightTemp < -50 || nightTemp > 60) {
+        alert('Error: Nighttime temperature seems unrealistic. Please enter a value between -50°C and 60°C.');
+        return;
+    }
+    
+    if (nightTemp > dayTemp) {
+        const confirm = window.confirm('Warning: Night temperature is higher than day temperature. This is unusual. Do you want to continue?');
+        if (!confirm) return;
+    }
     
     const data = {
         day: temperatureData.length + 1,
@@ -79,6 +127,7 @@ function addTemperature(event) {
     };
     
     temperatureData.push(data);
+    saveDataToStorage();
     
     // Reset form
     document.getElementById('tempForm').reset();
@@ -292,11 +341,44 @@ function convertFromFahrenheit() {
 function clearAllData() {
     if (confirm('Are you sure you want to clear all data? This cannot be undone.')) {
         temperatureData = [];
+        saveDataToStorage();
         updateDayNumber();
         updateStats();
         document.getElementById('tempForm').reset();
         document.getElementById('dayTempF').textContent = '';
         document.getElementById('nightTempF').textContent = '';
-        alert('All data cleared!');
+        document.getElementById('analysisReport').innerHTML = '';
+        alert('All data cleared successfully!');
     }
+}
+
+// Export data to CSV
+function exportToCSV() {
+    if (temperatureData.length === 0) {
+        alert('No data to export. Please add temperature data first.');
+        return;
+    }
+    
+    // Create CSV content
+    let csv = 'Day,Day Temp (°C),Day Temp (°F),Night Temp (°C),Night Temp (°F),Fluctuation (°F)\n';
+    
+    temperatureData.forEach(data => {
+        const fluctuation = data.dayTempF - data.nightTempF;
+        csv += `${data.day},${data.dayTempC.toFixed(2)},${data.dayTempF.toFixed(2)},${data.nightTempC.toFixed(2)},${data.nightTempF.toFixed(2)},${fluctuation.toFixed(2)}\n`;
+    });
+    
+    // Create download link
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    
+    link.setAttribute('href', url);
+    link.setAttribute('download', `orchi-flora-data-${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    alert('Data exported successfully!');
 }
